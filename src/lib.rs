@@ -1,7 +1,5 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+/// Errors that can be encountered while interacting with the papirus driver
+pub mod errors;
+
+/// Papirus Driver Interface
+pub mod interface;
