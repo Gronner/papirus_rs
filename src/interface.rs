@@ -45,7 +45,7 @@
         }
 
         pub fn write_data(&self, data: Vec<u8>) {
-            const DISPLAY_FILE: &str = "BE/display";
+            const DISPLAY_FILE: &str = "display";
             let display_path = format!("{}/{}", self.interface, DISPLAY_FILE);
             let mut papirus_interface = open_write_interface(&display_path).unwrap();
             papirus_interface.write(&data).unwrap();
