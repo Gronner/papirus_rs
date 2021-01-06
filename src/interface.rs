@@ -3,29 +3,48 @@
     use std::io;
     use crate::errors;
 
+    pub enum Mode {
+        FullUpdate,
+        PartialUpdate,
+        FastUpdate,
+    }
+
     pub struct PapirusDisplay {
         interface: String,
     }
 
     impl PapirusDisplay {
         pub fn new(display_path: &str) -> PapirusDisplay {
-
             PapirusDisplay {
                 interface: String::from(display_path),
             }
         }
 
-        pub fn full_update(&self) {
+        pub fn write(&self, data: Vec<u8>) {
+            self.write_data(data);
+            self.partial_update();
+        }
+
+        pub fn write_with_mode(&self, data: Vec<u8>, mode: Mode) {
+            self.write_data(data);
+            match mode {
+                Mode::FullUpdate => self.full_update(),
+                Mode::PartialUpdate => self.partial_update(),
+                Mode::FastUpdate => self.fast_update(),
+            };
+        }
+
+        fn full_update(&self) {
             const UPDATE_COMMAND: &str = "U";
             self.execute_command(UPDATE_COMMAND);
         }
 
-        pub fn partial_update(&self) {
+        fn partial_update(&self) {
             const PARTIAL_UPDATE_COMMAND: &str = "P";
             self.execute_command(PARTIAL_UPDATE_COMMAND);
         }
 
-        pub fn fast_update(&self) {
+        fn fast_update(&self) {
             const FAST_UPDATE_COMMAND: &str = "F";
             self.execute_command(FAST_UPDATE_COMMAND);
 
@@ -44,7 +63,7 @@
             papirus_interface.flush().unwrap();
         }
 
-        pub fn write_data(&self, data: Vec<u8>) {
+        fn write_data(&self, data: Vec<u8>) {
             const DISPLAY_FILE: &str = "display";
             let display_path = format!("{}/{}", self.interface, DISPLAY_FILE);
             let mut papirus_interface = open_write_interface(&display_path).unwrap();
