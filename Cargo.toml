@@ -8,3 +8,5 @@ edition = "2018"
 
 [dependencies]
 serial_test = "0.5.1"
+rusttype = "0.9.2"
+image = "0.23.12"
